@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2024-02-22T03:53:35.230Z</updated>
+  <updated>2024-02-22T05:24:09.442Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,70 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>epoll笔记</title>
+    <link href="http://example.com/epoll%E7%AC%94%E8%AE%B0/"/>
+    <id>http://example.com/epoll%E7%AC%94%E8%AE%B0/</id>
+    <published>2024-02-22T05:23:51.000Z</published>
+    <updated>2024-02-22T05:24:09.442Z</updated>
+    
+    <content type="html"><![CDATA[<p>C10M 千万级连接、高性能、高并发</p><p>水平触发是只要读缓冲区有数据，就会一直触发可读信号，而边缘触发仅仅在空变为非空的时候通知一次</p><h3 id="网络事件"><a href="#网络事件" class="headerlink" title="网络事件"></a>网络事件</h3><p>处理基于 TCP 的应用层协议时，一个请求的处理代码必须被 拆分到多个回调函数中，由异步框架在相应的事件生成时调用它们。这就是事件驱动方式， 它通过减少上下文切换次数，实现了 C10M 级别的高并发。  </p><p> 读事件与写事件，其中，读事件表示有到 达的消息需要处理，而写事件表示可以发送消息（TCP 连接的写缓冲区中有可用空间）  </p><p> 多个请求复 用了一个进程，也叫做多路复用（或者叫做时分多路复用）。我们熟知的 epoll，就是内核 提供给用户态的多路复用接口，进程可以通过它从内核中获取事件。  </p><p> 当调用 write 函 数发送时，会先把内存中的数据拷贝到写缓冲区中后，再发送到网卡上。为何要多此一举呢？这是因为在对方没有明确表示收到前，TCP 会通过<strong>定时器重发写缓冲区中的数据</strong>，保证消息能够到达对方。  </p><p>tcp 与事件之间的关系</p><ul><li>在连接建立时，客户端会生成写事件write，服务端会生成读事件 accept</li><li>数据交互过程中，接受数据产生读事件，发送数据与内核缓冲区有关，有空闲缓冲区时，产生 写事件。</li><li>连接关闭时，被动关闭方会收到读事件，提醒执行close方法</li></ul><p><img src="https://cdn.nlark.com/yuque/0/2024/png/35483742/1704186022385-57026a26-1532-4b48-9b4b-d0ec7e7a2b35.png" alt="img"></p><p><img src="https://cdn.nlark.com/yuque/0/2024/png/35483742/1704186222928-988fd529-ede5-4237-a11e-9d0b00e61ad6.png" alt="img"></p><p><img src="https://cdn.nlark.com/yuque/0/2024/png/35483742/1704186319332-dcec2a24-ff9c-4f40-84b1-c52e7bc92c29.png" alt="img"></p><p>事件回调函数处理时间要足够短。</p><ul><li>计算任务：要么把这 样的请求放在独立的线程中完成，要么把请求的处理过程拆分成多段，确保每段能够快速执 行完，同时每段执行完都要均等地处理其他事件，  </li><li>磁盘读写：写很快，write直接放到pagecache就算完成；读取大文件，分成多个小文件间隔读取。</li><li>网络请求：设置socket为非阻塞式。</li></ul><p>epoll</p><ul><li>将要监听事件的socket注册到内核。</li><li>收集事件，不用重复传递socket，节省上下文切换内存拷贝消耗。</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;C10M 千万级连接、高性能、高并发&lt;/p&gt;
+&lt;p&gt;水平触发是只要读缓冲区有数据，就会一直触发可读信号，而边缘触发仅仅在空变为非空的时候通知一次&lt;/p&gt;
+&lt;h3 id=&quot;网络事件&quot;&gt;&lt;a href=&quot;#网络事件&quot; class=&quot;headerlink&quot; title=&quot;网络事件</summary>
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>cdn</title>
+    <link href="http://example.com/cdn/"/>
+    <id>http://example.com/cdn/</id>
+    <published>2024-02-22T05:22:50.000Z</published>
+    <updated>2024-02-22T05:23:04.393Z</updated>
+    
+    <content type="html"><![CDATA[<p>内容分发网络（CDN）通过在多个地理位置建立一个入网点（PoP）或一组 CDN 边缘服务器来工作。这个分布在不同地理位置的网络<strong>基于缓存、动态加速和边缘逻辑计算</strong>的原则工作。</p><h3 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h3><p><a href="https://aws.amazon.com/caching/cdn/">CDN 中的缓存</a>的工作原理如下：</p><ol><li>来自偏远地理位置的网站访客首次从您的网站请求静态 Web 内容。</li><li>请求到达您的 Web 应用程序服务器或原始服务器。原始服务器将响应发送给远程访客。同时，它还将响应的副本发送到与该访客地理上最近的 CDN POP。</li><li>CDN POP 服务器将副本存储为缓存文件。</li><li>下次该访客或该位置的任何其他访客发出相同的请求时，将由缓存服务器而不是原始服务器发送响应。</li></ol><h3 id="动态加速"><a href="#动态加速" class="headerlink" title="动态加速"></a>动态加速</h3><p>动态加速是指通过在 Web 应用程序和客户端之间设置中间 CDN 服务器，从而加快对动态 Web 内容请求的服务器响应。缓存不适用于动态 Web 内容，因为内容因用户请求而异。CDN 服务器必须针对每个动态请求重新连接原始服务器，但它们通过优化自己与原始服务器之间的连接加速了该过程。<strong>可能还需要花费时间打开和关闭连接以进行安全验证。另一方面，如果附近的 CDN 服务器将请求转发到原始服务器，它们就已经建立了一个持续的、受信任的连接。</strong></p><ul><li>智能路由算法</li><li>地理位置靠近原始服务器</li><li>能够处理客户端请求，缩减其大小</li></ul><h3 id="边缘逻辑计算"><a href="#边缘逻辑计算" class="headerlink" title="边缘逻辑计算"></a>边缘逻辑计算</h3><p>您可以对 CDN 边缘服务器进行编程，以执行简化客户端和服务器之间通信的逻辑计算。例如，此服务器可以执行以下操作：</p><ul><li>检查用户请求并修改缓存行为。</li><li>验证和处理不正确的用户请求。</li><li>在响应之前修改或优化内容。</li></ul><p>Web 服务器和网络边缘之间的应用程序逻辑分布有助于开发人员减轻原始服务器的计算需求并提高网站性能。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;内容分发网络（CDN）通过在多个地理位置建立一个入网点（PoP）或一组 CDN 边缘服务器来工作。这个分布在不同地理位置的网络&lt;strong&gt;基于缓存、动态加速和边缘逻辑计算&lt;/strong&gt;的原则工作。&lt;/p&gt;
+&lt;h3 id=&quot;缓存&quot;&gt;&lt;a href=&quot;#缓存&quot; clas</summary>
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>test</title>
+    <link href="http://example.com/test/"/>
+    <id>http://example.com/test/</id>
+    <published>2024-02-22T05:21:11.000Z</published>
+    <updated>2024-02-22T05:21:39.170Z</updated>
+    
+    <content type="html"><![CDATA[<p>1111111111111111111111</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;1111111111111111111111&lt;/p&gt;
+</summary>
+      
+    
+    
+    
+    
+  </entry>
   
   <entry>
     <title>Hello World</title>

@@ -1,2 +1,5 @@
+http://example.com/epoll%E7%AC%94%E8%AE%B0/
+http://example.com/cdn/
+http://example.com/test/
 http://example.com/hello-world/
 http://example.com/
