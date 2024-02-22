@@ -8,7 +8,7 @@
 </ul>
 <p> 用 PageCache 缓存最近访问的数据，当空间不足时淘汰最久 未被访问的缓存（即 LRU 算法）。读磁盘时优先到 PageCache 中找一找，如果数据存在 便直接返回，这便大大提升了读磁盘的性能。  </p>
 <p>普通磁盘文件<strong>读取并通过socket发送</strong>出去需要经过<strong>4次内存拷贝和4次用户态与内核态切换。</strong></p>
-<p><img src="/./%E6%97%A0%E9%9B%B6%E6%8B%B7%E8%B4%9D.png" alt="img"></p>
+<p><img src="/%E9%9B%B6%E6%8B%B7%E8%B4%9D/%E6%97%A0%E9%9B%B6%E6%8B%B7%E8%B4%9D.png" alt="img"></p>
 <p>零拷贝–sendfile方法</p>
 <p>操作系统内核提供的函数实现了该功能，<strong>因为不经过用户缓冲区，要求用户不需要对磁盘读取的内容做处理。</strong></p>
 <p>数据处理不经过用户缓冲区，减少了<strong>两次用户态到内核态的上下文切换，减少了一次内存拷贝。</strong></p>
