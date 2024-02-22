@@ -12,13 +12,13 @@
 <p>零拷贝–sendfile方法</p>
 <p>操作系统内核提供的函数实现了该功能，<strong>因为不经过用户缓冲区，要求用户不需要对磁盘读取的内容做处理。</strong></p>
 <p>数据处理不经过用户缓冲区，减少了<strong>两次用户态到内核态的上下文切换，减少了一次内存拷贝。</strong></p>
-<p><img src="/.%5C%E9%9B%B6%E6%8B%B7%E8%B4%9D%5Csendfile%E9%9B%B6%E6%8B%B7%E8%B4%9D.png" alt="img"></p>
+<p><img src="/%E9%9B%B6%E6%8B%B7%E8%B4%9D/sendfile%E9%9B%B6%E6%8B%B7%E8%B4%9D.png" alt="img"></p>
 <p>DMA技术下的零拷贝技术 Direct Memory Access</p>
 <p><a target="_blank" rel="noopener" href="https://www.baike.com/wikiid/3618426234596855008?from=wiki_content&prd=innerlink">DMA</a>是指外部设备不通过CPU而直接与系统内存交换数据的接口技术，再减少一次内存拷贝。</p>
-<p><img src="/.%5C%E9%9B%B6%E6%8B%B7%E8%B4%9D%5CDMA%E4%B8%8E%E9%9B%B6%E6%8B%B7%E8%B4%9D.png" alt="img"></p>
+<p><img src="/%E9%9B%B6%E6%8B%B7%E8%B4%9D/DMA%E4%B8%8E%E9%9B%B6%E6%8B%B7%E8%B4%9D.png" alt="img"></p>
 <p>异步io</p>
 <p>发起异步io请求后，立即返回处理其他任务，待有数据后会通知用户，然后进行数据读取。</p>
-<p><img src="/.%5C%E9%9B%B6%E6%8B%B7%E8%B4%9D%5C%E5%BC%82%E6%AD%A5IO.png" alt="img"></p>
+<p><img src="/%E9%9B%B6%E6%8B%B7%E8%B4%9D/%E5%BC%82%E6%AD%A5IO.png" alt="img"></p>
 <p>直接io</p>
 <ul>
 <li>不经过pagecache的称为直接io,经过pagecache的称为缓存io。</li>

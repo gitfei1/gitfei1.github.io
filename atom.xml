@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2024-02-22T05:57:30.320Z</updated>
+  <updated>2024-02-22T06:12:33.201Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -21,9 +21,9 @@
     <link href="http://example.com/%E9%9B%B6%E6%8B%B7%E8%B4%9D/"/>
     <id>http://example.com/%E9%9B%B6%E6%8B%B7%E8%B4%9D/</id>
     <published>2024-02-22T05:37:33.000Z</published>
-    <updated>2024-02-22T05:57:30.320Z</updated>
+    <updated>2024-02-22T06:12:33.201Z</updated>
     
-    <content type="html"><![CDATA[<p> 为了传输 320MB 的文件，在用户缓冲区分配了 32KB 的内 存，把文件分成 1 万份传送，然而，这 32KB 是怎么来的？  </p><p> 如果用户缓冲区过 大，它就无法一次性把消息全拷贝给 socket 缓冲区；如果用户缓冲区过小，则会导致过多 的 read&#x2F;write 系统调用。  </p><p>pagecache:磁盘高速缓存</p><ul><li>在内存中取一小块空间用于存放经常访问的磁盘的数据，局部性原理。</li><li>预读技术，会读取多一些数据，提高顺序访问的性能</li></ul><p> 用 PageCache 缓存最近访问的数据，当空间不足时淘汰最久 未被访问的缓存（即 LRU 算法）。读磁盘时优先到 PageCache 中找一找，如果数据存在 便直接返回，这便大大提升了读磁盘的性能。  </p><p>普通磁盘文件<strong>读取并通过socket发送</strong>出去需要经过<strong>4次内存拷贝和4次用户态与内核态切换。</strong></p><p><img src="/%E9%9B%B6%E6%8B%B7%E8%B4%9D/%E6%97%A0%E9%9B%B6%E6%8B%B7%E8%B4%9D.png" alt="img"></p><p>零拷贝–sendfile方法</p><p>操作系统内核提供的函数实现了该功能，<strong>因为不经过用户缓冲区，要求用户不需要对磁盘读取的内容做处理。</strong></p><p>数据处理不经过用户缓冲区，减少了<strong>两次用户态到内核态的上下文切换，减少了一次内存拷贝。</strong></p><p><img src="/.%5C%E9%9B%B6%E6%8B%B7%E8%B4%9D%5Csendfile%E9%9B%B6%E6%8B%B7%E8%B4%9D.png" alt="img"></p><p>DMA技术下的零拷贝技术 Direct Memory Access</p><p><a href="https://www.baike.com/wikiid/3618426234596855008?from=wiki_content&prd=innerlink">DMA</a>是指外部设备不通过CPU而直接与系统内存交换数据的接口技术，再减少一次内存拷贝。</p><p><img src="/.%5C%E9%9B%B6%E6%8B%B7%E8%B4%9D%5CDMA%E4%B8%8E%E9%9B%B6%E6%8B%B7%E8%B4%9D.png" alt="img"></p><p>异步io</p><p>发起异步io请求后，立即返回处理其他任务，待有数据后会通知用户，然后进行数据读取。</p><p><img src="/.%5C%E9%9B%B6%E6%8B%B7%E8%B4%9D%5C%E5%BC%82%E6%AD%A5IO.png" alt="img"></p><p>直接io</p><ul><li>不经过pagecache的称为直接io,经过pagecache的称为缓存io。</li><li>对于磁盘，异步io仅支持直接io.</li></ul><p> 大文 件不应使用 PageCache，进而也不应使用零拷贝技术处理。</p><p>不过，零拷贝有一个缺点，就是不允许进程对文件内容作一些加工再发送，比如数据压缩后再发送。另外，当 PageCache 引发负作用时，也不能使用零拷贝，此时可以用异步 IO+直接 IO 替换。我们通常会设定一个文件大小阈值，针对大文件使用异步 IO 和直接 IO，而对小文件使用零拷贝。</p><p>大文件采用异步io+直接io的方式，不走pageCache。</p><p>小文件采用pagecache方式</p><p> 由于文件太大，文件中某一部分内容被再次访问到的概率其实非常低。这带来了 2 个问题：首先，由于 PageCache 长期被大文件占据，热点小文件就无法充分使用 PageCache，它们读起来变慢了；其次，PageCache 中的大文件没有享受到缓存的好处， 但却耗费 CPU 多拷贝到 PageCache 一次？</p>]]></content>
+    <content type="html"><![CDATA[<p> 为了传输 320MB 的文件，在用户缓冲区分配了 32KB 的内 存，把文件分成 1 万份传送，然而，这 32KB 是怎么来的？  </p><p> 如果用户缓冲区过 大，它就无法一次性把消息全拷贝给 socket 缓冲区；如果用户缓冲区过小，则会导致过多 的 read&#x2F;write 系统调用。  </p><p>pagecache:磁盘高速缓存</p><ul><li>在内存中取一小块空间用于存放经常访问的磁盘的数据，局部性原理。</li><li>预读技术，会读取多一些数据，提高顺序访问的性能</li></ul><p> 用 PageCache 缓存最近访问的数据，当空间不足时淘汰最久 未被访问的缓存（即 LRU 算法）。读磁盘时优先到 PageCache 中找一找，如果数据存在 便直接返回，这便大大提升了读磁盘的性能。  </p><p>普通磁盘文件<strong>读取并通过socket发送</strong>出去需要经过<strong>4次内存拷贝和4次用户态与内核态切换。</strong></p><p><img src="/%E9%9B%B6%E6%8B%B7%E8%B4%9D/%E6%97%A0%E9%9B%B6%E6%8B%B7%E8%B4%9D.png" alt="img"></p><p>零拷贝–sendfile方法</p><p>操作系统内核提供的函数实现了该功能，<strong>因为不经过用户缓冲区，要求用户不需要对磁盘读取的内容做处理。</strong></p><p>数据处理不经过用户缓冲区，减少了<strong>两次用户态到内核态的上下文切换，减少了一次内存拷贝。</strong></p><p><img src="/%E9%9B%B6%E6%8B%B7%E8%B4%9D/sendfile%E9%9B%B6%E6%8B%B7%E8%B4%9D.png" alt="img"></p><p>DMA技术下的零拷贝技术 Direct Memory Access</p><p><a href="https://www.baike.com/wikiid/3618426234596855008?from=wiki_content&prd=innerlink">DMA</a>是指外部设备不通过CPU而直接与系统内存交换数据的接口技术，再减少一次内存拷贝。</p><p><img src="/%E9%9B%B6%E6%8B%B7%E8%B4%9D/DMA%E4%B8%8E%E9%9B%B6%E6%8B%B7%E8%B4%9D.png" alt="img"></p><p>异步io</p><p>发起异步io请求后，立即返回处理其他任务，待有数据后会通知用户，然后进行数据读取。</p><p><img src="/%E9%9B%B6%E6%8B%B7%E8%B4%9D/%E5%BC%82%E6%AD%A5IO.png" alt="img"></p><p>直接io</p><ul><li>不经过pagecache的称为直接io,经过pagecache的称为缓存io。</li><li>对于磁盘，异步io仅支持直接io.</li></ul><p> 大文 件不应使用 PageCache，进而也不应使用零拷贝技术处理。</p><p>不过，零拷贝有一个缺点，就是不允许进程对文件内容作一些加工再发送，比如数据压缩后再发送。另外，当 PageCache 引发负作用时，也不能使用零拷贝，此时可以用异步 IO+直接 IO 替换。我们通常会设定一个文件大小阈值，针对大文件使用异步 IO 和直接 IO，而对小文件使用零拷贝。</p><p>大文件采用异步io+直接io的方式，不走pageCache。</p><p>小文件采用pagecache方式</p><p> 由于文件太大，文件中某一部分内容被再次访问到的概率其实非常低。这带来了 2 个问题：首先，由于 PageCache 长期被大文件占据，热点小文件就无法充分使用 PageCache，它们读起来变慢了；其次，PageCache 中的大文件没有享受到缓存的好处， 但却耗费 CPU 多拷贝到 PageCache 一次？</p>]]></content>
     
     
       
