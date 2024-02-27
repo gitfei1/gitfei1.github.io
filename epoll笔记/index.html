@@ -11,7 +11,7 @@
 <li>数据交互过程中，接受数据产生读事件，发送数据与内核缓冲区有关，有空闲缓冲区时，产生 写事件。</li>
 <li>连接关闭时，被动关闭方会收到读事件，提醒执行close方法</li>
 </ul>
-<p><img src="https://cdn.nlark.com/yuque/0/2024/png/35483742/1704186022385-57026a26-1532-4b48-9b4b-d0ec7e7a2b35.png" alt="img"></p>
+<p><img src="/epoll%E7%AC%94%E8%AE%B0/%E7%BD%91%E7%BB%9C%E8%BF%9E%E6%8E%A5%E4%B8%AD%E7%9A%84%E4%BA%8B%E4%BB%B6.png" alt="img"></p>
 <p><img src="https://cdn.nlark.com/yuque/0/2024/png/35483742/1704186222928-988fd529-ede5-4237-a11e-9d0b00e61ad6.png" alt="img"></p>
 <p><img src="https://cdn.nlark.com/yuque/0/2024/png/35483742/1704186319332-dcec2a24-ff9c-4f40-84b1-c52e7bc92c29.png" alt="img"></p>
 <p>事件回调函数处理时间要足够短。</p>
@@ -25,4 +25,4 @@
 <li>将要监听事件的socket注册到内核。</li>
 <li>收集事件，不用重复传递socket，节省上下文切换内存拷贝消耗。</li>
 </ul>
-</div></article></div></main><footer><div class="paginator"><a href="/test1/" class="prev">PREV</a><a href="/cdn/" class="next">NEXT</a></div><div class="copyright"><p>© 2015 - 2024 <a href="http://example.com">不知道</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script></body></html>
+</div></article></div></main><footer><div class="paginator"><a href="/%E9%9B%B6%E6%8B%B7%E8%B4%9D/" class="prev">上一篇</a><a href="/cdn/" class="next">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="http://example.com">不知道</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script></body></html>
