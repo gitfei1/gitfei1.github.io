@@ -21,4 +21,23 @@
 
 <p>在使用hexo new xxx 之后，会生成xxx文件夹和xxx.md，只需要把图片a.jpg放入文件夹，</p>
 <p>之后就可以使用<code>![](a.jpg)</code>的方式愉快的插入图片了。</p>
+<h3 id="提交谷歌收录"><a href="#提交谷歌收录" class="headerlink" title="提交谷歌收录"></a>提交谷歌收录</h3><ol>
+<li>验证站点</li>
+</ol>
+<p>选择html添加代码验证方式，将代码添加到public目录下的index.html文件中，位置是head部分的title附近即可。然后重新部署 hexo d(不要hexo clean会覆盖)</p>
+<ol>
+<li>添加站点地图</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-generator-sitemap --save</span><br></pre></td></tr></table></figure>
+
+
+
+<p>配置Hexo的_config.yml文件，添加如下字段:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">sitemap:</span></span><br><span class="line">    <span class="attr">path:</span> <span class="string">sitemap.xml</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>执行hexo clean、hexo g之后，修改_config.yaml中url字段为博客网站的地址。然后hexo d 部署。</p>
+<p>最后在站点地图添加即可。</p>
+<p><img src="/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/%E7%AB%99%E9%95%BF%E5%9C%B0%E5%9B%BE.png" alt="img"></p>
 </div></article></div></main><footer><div class="paginator"><a href="/%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA/" class="next">NEXT</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://gitfei1.github.io">不知道</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script></body></html>
