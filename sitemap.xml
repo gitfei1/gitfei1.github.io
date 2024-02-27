@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://example.com/epoll%E7%AC%94%E8%AE%B0/</loc>
+    <loc>https://gitfei1.github.io/epoll%E7%AC%94%E8%AE%B0/</loc>
     
     <lastmod>2024-02-27</lastmod>
     
@@ -11,7 +11,7 @@
   </url>
   
   <url>
-    <loc>http://example.com/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/</loc>
+    <loc>https://gitfei1.github.io/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/</loc>
     
     <lastmod>2024-02-27</lastmod>
     
@@ -20,7 +20,7 @@
   </url>
   
   <url>
-    <loc>http://example.com/%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA/</loc>
+    <loc>https://gitfei1.github.io/%E9%93%BE%E8%B7%AF%E8%BF%BD%E8%B8%AA/</loc>
     
     <lastmod>2024-02-27</lastmod>
     
@@ -29,7 +29,7 @@
   </url>
   
   <url>
-    <loc>http://example.com/%E9%9B%B6%E6%8B%B7%E8%B4%9D/</loc>
+    <loc>https://gitfei1.github.io/%E9%9B%B6%E6%8B%B7%E8%B4%9D/</loc>
     
     <lastmod>2024-02-22</lastmod>
     
@@ -38,7 +38,7 @@
   </url>
   
   <url>
-    <loc>http://example.com/cdn/</loc>
+    <loc>https://gitfei1.github.io/cdn/</loc>
     
     <lastmod>2024-02-22</lastmod>
     
@@ -48,7 +48,7 @@
   
 
   <url>
-    <loc>http://example.com/</loc>
+    <loc>https://gitfei1.github.io/</loc>
     <lastmod>2024-02-27</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
