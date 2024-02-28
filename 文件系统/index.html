@@ -1,0 +1,63 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> 文件系统 · 不知道的博客</title><meta name="description" content="文件系统 - 不知道"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/favicon.png"><link rel="stylesheet" href="/css/apollo.css"><link rel="search" type="application/opensearchdescription+xml" href="https://gitfei1.github.io/atom.xml" title="不知道的博客"><meta name="generator" content="Hexo 7.1.1"><link rel="alternate" href="/atom.xml" title="不知道的博客" type="application/atom+xml">
+</head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="/favicon.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="http://weibo.com/sunchongsheng" target="_blank" class="nav-list-link">WEIBO</a></li><li class="nav-list-item"><a href="https://github.com/pinggod" target="_blank" class="nav-list-link">GITHUB</a></li><li class="nav-list-item"><a href="/atom.xml" target="_self" class="nav-list-link">RSS</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">文件系统</h1><div class="post-info">2024年2月28日</div><div class="post-content"><h3 id="磁盘格式化"><a href="#磁盘格式化" class="headerlink" title="磁盘格式化"></a>磁盘格式化</h3><p>整理和分配超级快、inode区域、block区域。</p>
+<h4 id="superblock"><a href="#superblock" class="headerlink" title="superblock"></a>superblock</h4><p>存储文件系统描述信息，如inode数量、inode大小、block数量、block大小、挂载信息等</p>
+<h4 id="block"><a href="#block" class="headerlink" title="block"></a>block</h4><p>block是实际存储文件数据的地方。</p>
+<p>ext2文件系统的block限制</p>
+<ul>
+<li>一个block最多只能存放一个文件</li>
+<li>格式化之后block大小和数量不再变化</li>
+<li>如果文件太大，会占用多个block</li>
+</ul>
+<p>对于小文件，由于占不满block会导致空间的浪费；对于大文件，由于占用多个block会导致磁盘读写效率降低。</p>
+<h4 id="inode"><a href="#inode" class="headerlink" title="inode"></a>inode</h4><p>inode是存储文件元数据的地方</p>
+<p><img src="/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/inode%E5%85%83%E6%95%B0%E6%8D%AE.png" alt="img"></p>
+<ul>
+<li>每个文件占用一个inode，文件系统文件数量与inode数量有关</li>
+<li>inode数量和大小在磁盘格式化时已确定下来</li>
+<li>系统读取文件，先找到inode确定访问权限，然后找到block读取。</li>
+</ul>
+<h4 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h4><ul>
+<li>目录的inode记录了目录的访问权限以及目录的block编号。</li>
+<li>目录block存储了该目录下所有的 文件名:文件inode号信息。</li>
+</ul>
+<h4 id="目录树读取"><a href="#目录树读取" class="headerlink" title="目录树读取"></a>目录树读取</h4><ul>
+<li>读取一个文件，要从根目录一层一层往下读</li>
+</ul>
+<p>举例 &#x2F;etc&#x2F;passwd文件读取过程</p>
+<ul>
+<li>根据挂载点信息获取&#x2F; 的inode，判断权限允许访问后，找到inode指向的block，从block查找&#x2F;etc这个目录的inode信息。</li>
+<li>查询&#x2F;etc的inode后，允许访问，找到指向的block，获取&#x2F;etc&#x2F;passwd文件的inode信息。</li>
+<li>inode信息允许访问后，找到block，然后读取数据。</li>
+</ul>
+<h4 id="inode-bitmap和block-bitmap"><a href="#inode-bitmap和block-bitmap" class="headerlink" title="inode bitmap和block bitmap"></a>inode bitmap和block bitmap</h4><p>新创建文件的流程：</p>
+<ul>
+<li>先确定使用者对于欲新增文件的目录是否具有w和x权限，有的话才能新增。</li>
+<li>根据inode bitmap找到没有使用的inode号，将文件的权限写入</li>
+<li>根据block bitmap找到没有使用的block号，将文件实际数据写入，且更新inode中block的指向。</li>
+<li>将inode和block更新到inode bitmap和block bitmap</li>
+</ul>
+<h3 id="文件系统"><a href="#文件系统" class="headerlink" title="文件系统"></a>文件系统</h3><p>文件系统是操作系统提供的，用于访问磁盘设备的软件。</p>
+<p>同一个文件系统中的某个inode号只会对应到一个文件内容，可以通过判断inode号确认不同文件名是否为相同的文件。</p>
+<h4 id="硬链接"><a href="#硬链接" class="headerlink" title="硬链接"></a>硬链接</h4><ul>
+<li>两个文件名不同的文件指向同一个inode，获取到的block自然也相同，文件内容自然也相同。</li>
+<li>如下： inode号都是1735156</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@w2 test]# touch a </span><br><span class="line">[root@w2 test]# ll -i</span><br><span class="line">1735156 -rw-r--r--. 1 root root 0 2月  28 22:36 a</span><br><span class="line">[root@w2 test]# ln a a.test</span><br><span class="line">[root@w2 test]# ll -i</span><br><span class="line">1735156 -rw-r--r--. 2 root root 0 2月  28 22:36 a</span><br><span class="line">1735156 -rw-r--r--. 2 root root 0 2月  28 22:36 a.test</span><br></pre></td></tr></table></figure>
+
+<h4 id="软连接"><a href="#软连接" class="headerlink" title="软连接"></a>软连接</h4><ul>
+<li>属于完成不同的文件，inode号不相同，block存储了源文件的路径，但是文件内容是相同的。</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@w2 test]# touch b</span><br><span class="line">[root@w2 test]# echo xxx &gt;b</span><br><span class="line">[root@w2 test]# ln -s b b.test</span><br><span class="line">[root@w2 test]# cat b.test</span><br><span class="line">xxx</span><br><span class="line">[root@w2 test]# ll -i</span><br><span class="line">总用量 4</span><br><span class="line">1735156 -rw-r--r--. 1 root root 4 2月  28 22:39 b</span><br><span class="line">1735157 lrwxrwxrwx. 1 root root 1 2月  28 22:40 b.test -&gt; b</span><br></pre></td></tr></table></figure>
+
+<h3 id="虚拟文件系统"><a href="#虚拟文件系统" class="headerlink" title="虚拟文件系统"></a>虚拟文件系统</h3><p><img src="/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/%E8%99%9A%E6%8B%9F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F.png" alt="img"></p>
+<h3 id="内存与磁盘"><a href="#内存与磁盘" class="headerlink" title="内存与磁盘"></a>内存与磁盘</h3><ul>
+<li>内存要比磁盘快很多，一般将常用的文件数据放到内存缓存，以加快访问速度。</li>
+<li>内存加载文件后更新了会标记为dirty，系统会定时将dirty的数据刷新到磁盘</li>
+<li>正常关机时，会主动调用sync指令将数据加载到磁盘。</li>
+</ul>
+<h3 id="挂载"><a href="#挂载" class="headerlink" title="挂载"></a>挂载</h3><ul>
+<li>将文件系统与目录树结合的动作称为挂载。</li>
+<li>挂载点必须是目录树，是文件系统的入口</li>
+<li>挂载之后就可以对文件系统进行访问了</li>
+</ul>
+</div></article></div></main><footer><div class="paginator"><a href="/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" class="next">NEXT</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://gitfei1.github.io">不知道</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script></body></html>
