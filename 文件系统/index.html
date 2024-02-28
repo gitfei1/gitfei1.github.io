@@ -3,6 +3,7 @@
 <h4 id="superblock"><a href="#superblock" class="headerlink" title="superblock"></a>superblock</h4><p>存储文件系统描述信息，如inode数量、inode大小、block数量、block大小、挂载信息等</p>
 <h4 id="block"><a href="#block" class="headerlink" title="block"></a>block</h4><p>block是实际存储文件数据的地方。</p>
 <p>ext2文件系统的block限制</p>
+<p><img src="/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/1709089160389-cdc24321-a77d-41a0-b5f2-82b944a85b63.png" alt="img"></p>
 <ul>
 <li>一个block最多只能存放一个文件</li>
 <li>格式化之后block大小和数量不再变化</li>
@@ -10,7 +11,7 @@
 </ul>
 <p>对于小文件，由于占不满block会导致空间的浪费；对于大文件，由于占用多个block会导致磁盘读写效率降低。</p>
 <h4 id="inode"><a href="#inode" class="headerlink" title="inode"></a>inode</h4><p>inode是存储文件元数据的地方</p>
-<p><img src="/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/inode%E5%85%83%E6%95%B0%E6%8D%AE.png" alt="img"></p>
+<p><img src="/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/1709089662542-b80e5e3b-6791-4226-96e0-5338b2e7ba34.png" alt="img"></p>
 <ul>
 <li>每个文件占用一个inode，文件系统文件数量与inode数量有关</li>
 <li>inode数量和大小在磁盘格式化时已确定下来</li>
@@ -49,7 +50,7 @@
 </ul>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@w2 test]# touch b</span><br><span class="line">[root@w2 test]# echo xxx &gt;b</span><br><span class="line">[root@w2 test]# ln -s b b.test</span><br><span class="line">[root@w2 test]# cat b.test</span><br><span class="line">xxx</span><br><span class="line">[root@w2 test]# ll -i</span><br><span class="line">总用量 4</span><br><span class="line">1735156 -rw-r--r--. 1 root root 4 2月  28 22:39 b</span><br><span class="line">1735157 lrwxrwxrwx. 1 root root 1 2月  28 22:40 b.test -&gt; b</span><br></pre></td></tr></table></figure>
 
-<h3 id="虚拟文件系统"><a href="#虚拟文件系统" class="headerlink" title="虚拟文件系统"></a>虚拟文件系统</h3><p><img src="/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/%E8%99%9A%E6%8B%9F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F.png" alt="img"></p>
+<h3 id="虚拟文件系统"><a href="#虚拟文件系统" class="headerlink" title="虚拟文件系统"></a>虚拟文件系统</h3><p><img src="/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/1709103312894-bd6e4473-ff94-4e8e-9022-adf9863fd783.png" alt="img"></p>
 <h3 id="内存与磁盘"><a href="#内存与磁盘" class="headerlink" title="内存与磁盘"></a>内存与磁盘</h3><ul>
 <li>内存要比磁盘快很多，一般将常用的文件数据放到内存缓存，以加快访问速度。</li>
 <li>内存加载文件后更新了会标记为dirty，系统会定时将dirty的数据刷新到磁盘</li>
