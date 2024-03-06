@@ -6,7 +6,7 @@
   <link href="https://gitfei1.github.io/atom.xml" rel="self"/>
   
   <link href="https://gitfei1.github.io/"/>
-  <updated>2024-02-29T11:13:32.640Z</updated>
+  <updated>2024-03-06T03:15:08.331Z</updated>
   <id>https://gitfei1.github.io/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Linux环境变量加载顺序分析</title>
+    <link href="https://gitfei1.github.io/Linux%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E5%8A%A0%E8%BD%BD%E9%A1%BA%E5%BA%8F%E5%88%86%E6%9E%90/"/>
+    <id>https://gitfei1.github.io/Linux%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E5%8A%A0%E8%BD%BD%E9%A1%BA%E5%BA%8F%E5%88%86%E6%9E%90/</id>
+    <published>2024-03-06T03:14:34.000Z</published>
+    <updated>2024-03-06T03:15:08.331Z</updated>
+    
+    <content type="html"><![CDATA[<p>参考连接 <a href="https://cloud.tencent.com/developer/article/2097050">https://cloud.tencent.com/developer/article/2097050</a></p><p><strong>&#x2F;etc&#x2F;profile是系统级的配置文件，而~&#x2F;.bash_profile是用户级的配置文件</strong>。 它们的作用范围和加载顺序不同，用户可以根据自己的需求在这两个文件中定义和修改配置。</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@w2 ~]# cat ~/.bash_profile | grep TEST</span><br><span class="line">export TEST=111</span><br><span class="line">[root@w2 ~]# cat /etc/profile | grep TEST</span><br><span class="line">export TEST=222</span><br><span class="line">[root@w2 ~]# env | grep TEST</span><br><span class="line">TEST=111</span><br></pre></td></tr></table></figure><ol><li>设置同一个环境变量TEST，在用户配置文件中设置为111，在系统配置文件设置为222。</li><li>先应用用户配置文件 source ~&#x2F;.bash_profile，通过env | grep TEST看到成功改为111.</li></ol><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@w2 ~]# cat test.sh </span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line"></span><br><span class="line">echo $TEST</span><br><span class="line">[root@w2 ~]# </span><br><span class="line">[root@w2 ~]# cat env.sh</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">!/bin/bash</span></span><br><span class="line">source /etc/profile</span><br><span class="line">echo $TEST</span><br><span class="line">[root@w2 ~]# </span><br></pre></td></tr></table></figure><ol><li>编写test.sh脚本读取环境变量TEST</li><li>在env.sh先应用&#x2F;etc&#x2F;profile，在读取TEST</li></ol><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@w2 ~]# ./test.sh </span><br><span class="line">111</span><br><span class="line">[root@w2 ~]# ./env.sh </span><br><span class="line">222</span><br><span class="line">[root@w2 ~]# env | grep TEST</span><br><span class="line">TEST=111</span><br></pre></td></tr></table></figure><ol><li>执行两个脚本并查看当前TEST值。</li></ol><p>结论：</p><ol><li>shell脚本执行直接读取env看到的环境变量值</li><li>如果脚本中执行source &#x2F;etc&#x2F;profile，会临时覆盖env中的环境变量，此时读取到&#x2F;etc&#x2F;profile中的值。</li><li>脚本退出后，env查看TEST变量未被修改。</li></ol><p>用法：</p><ol><li>&#x2F;etc&#x2F;profile文件就存放系统的环境变量，应用到全局。</li><li>~&#x2F;.bash_profile文件就存放用户的环境变量。</li><li>写shell 脚本的时候都应用一下 source &#x2F;etc&#x2F;profile  source ~&#x2F;.bash_profile</li></ol>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;参考连接 &lt;a href=&quot;https://cloud.tencent.com/developer/article/2097050&quot;&gt;https://cloud.tencent.com/developer/article/2097050&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong</summary>
+      
+    
+    
+    
+    
+  </entry>
   
   <entry>
     <title>wireshark使用</title>
