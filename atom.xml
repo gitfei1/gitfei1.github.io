@@ -6,7 +6,7 @@
   <link href="https://gitfei1.github.io/atom.xml" rel="self"/>
   
   <link href="https://gitfei1.github.io/"/>
-  <updated>2024-03-07T03:02:34.704Z</updated>
+  <updated>2024-08-05T11:53:46.542Z</updated>
   <id>https://gitfei1.github.io/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Nats基础</title>
+    <link href="https://gitfei1.github.io/Nats%E5%9F%BA%E7%A1%80/"/>
+    <id>https://gitfei1.github.io/Nats%E5%9F%BA%E7%A1%80/</id>
+    <published>2024-08-05T11:17:33.000Z</published>
+    <updated>2024-08-05T11:53:46.542Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Nats"><a href="#Nats" class="headerlink" title="Nats"></a>Nats</h2><ol><li>高性能、简单、安全</li><li>超过30中语言支持的客户端</li><li>CNCF项目</li><li>实时数据流场景适用</li><li>易于开发运维。</li><li>不到20MB</li><li><a href="https://nats.io/">https://nats.io/</a></li></ol><h2 id="两种模式"><a href="#两种模式" class="headerlink" title="两种模式"></a>两种模式</h2><p>core Nats 的服务质量是最多发送一次  fire and forget （发送并且忘记）,它仅会将消息保留在内存中，永远不会直接将消息写入磁盘，不持久化。</p><p>JetStream：当你用到持久化、key&#x2F;value存储、最少发送一次、精确发送一次等功能时，手动打开内置的JetStream功能。</p><h2 id="Subject"><a href="#Subject" class="headerlink" title="Subject"></a>Subject</h2><ul><li><p>其他队列系统的主题关键词</p><p>  <code>Subjects</code>  <code>topics</code>, <code>channels</code>, <code>streams</code></p></li><li><p>subject 的特点</p><p>  消息会自动发送给所有感兴趣的订阅者，无论他们在哪里。<br>  没有订阅者的主题消息会自动被丢弃（有关消息持久化的详细信息，请查看 JetStream 功能）。</p></li></ul><p><img src="/Nats%E5%9F%BA%E7%A1%80/subject.png" alt="img"></p><ul><li><p>subject 通配符</p><p>第一个通配符是  * ，可以匹配一个单独的标记，可以出现多次。例如，如果一个应用程序想要监听东部时区，它可以订阅 time.<em>.east，这样就可以匹配 time.us.east 和 time.eu.east。注意，   * 不能匹配标记中的子字符串，比如 time.New</em>.east。</p><p><img src="/Nats%E5%9F%BA%E7%A1%80/wildcard1.png" alt="img"></p><p>第二个通配符是 &gt;，它可以匹配一个或多个标记，并且只能出现在主题的末尾。例如，time.us.&gt; 会匹配 time.us.east 和 time.us.east.atlanta，而 time.us.* 只能匹配 time.us.east，因为它无法匹配多个标记。单独订阅一个subject为<code>&gt;</code>的会接收所有主题的消息。<br><img src="/Nats%E5%9F%BA%E7%A1%80/wildcard2.png" alt="img"></p></li><li><p>subject 的数量</p><p>  NATS可以高效地管理数千万个主题，因此你可以为你的业务实体使用细粒度的地址。主题是短暂的资源，当没有人订阅时，它们会消失。<br>  不过，主题订阅需要服务器将其缓存到内存中。考虑到当你订阅的主题数量超过一百万时，你将需要超过1GB的服务器内存，而且这个需求将线性增长。</p></li></ul><h2 id="Publish-Subscribe"><a href="#Publish-Subscribe" class="headerlink" title="Publish-Subscribe"></a>Publish-Subscribe</h2><ul><li>fan-out模型<br><img src="/Nats%E5%9F%BA%E7%A1%80/fan-out%E6%A8%A1%E5%9E%8B.png" alt="img"><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nats sub msg.test</span><br><span class="line">nats pub msg.test &quot;NATS MESSAGE&quot;</span><br></pre></td></tr></table></figure></li></ul><h2 id="message"><a href="#message" class="headerlink" title="message"></a>message</h2><pre><code>消息具有最大大小（在服务器配置中使用 max_payload 设置）。默认情况下，大小设置为 1 MB，但如果需要，可以增加到 64 MB（尽管我们建议将最大消息大小保持在更合理的值，例如 8 MB）。</code></pre><h2 id="Request-Reply"><a href="#Request-Reply" class="headerlink" title="Request-Reply"></a>Request-Reply</h2><p><img src="/Nats%E5%9F%BA%E7%A1%80/request_reply.png" alt="img"></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nats reply help.please &#x27;OK, I CAN HELP!!!</span><br><span class="line"></span><br><span class="line">nats request help.please &#x27;I need help!</span><br></pre></td></tr></table></figure><h2 id="Queue-Groups"><a href="#Queue-Groups" class="headerlink" title="Queue Groups"></a>Queue Groups</h2><p>多个消费者并行消费消息,一条消息只能被一个消费者消费。<br><img src="/Nats%E5%9F%BA%E7%A1%80/queue-group.png" alt="img"></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;Nats&quot;&gt;&lt;a href=&quot;#Nats&quot; class=&quot;headerlink&quot; title=&quot;Nats&quot;&gt;&lt;/a&gt;Nats&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;高性能、简单、安全&lt;/li&gt;
+&lt;li&gt;超过30中语言支持的客户端&lt;/li&gt;
+&lt;li&gt;CNCF项目&lt;/li&gt;
+&lt;l</summary>
+      
+    
+    
+    
+    
+  </entry>
   
   <entry>
     <title>json解析方式对比测试</title>
