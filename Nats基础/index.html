@@ -83,4 +83,203 @@
 
 <h2 id="Key-Value-Store"><a href="#Key-Value-Store" class="headerlink" title="Key&#x2F;Value Store"></a>Key&#x2F;Value Store</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 要在JetStream模式下</span></span><br><span class="line">nats account info</span><br><span class="line"></span><br><span class="line"><span class="comment">#Creating a KV bucket</span></span><br><span class="line">nats kv add my-kv</span><br><span class="line"></span><br><span class="line"><span class="comment">#Storing a value</span></span><br><span class="line">nats kv put my-kv Key1 Value1</span><br><span class="line"></span><br><span class="line"><span class="comment">#Getting a value</span></span><br><span class="line">nats kv get my-kv Key1</span><br><span class="line"></span><br><span class="line"><span class="comment">#Deleting a value</span></span><br><span class="line">nats kv del my-kv Key1</span><br><span class="line"></span><br><span class="line"><span class="comment"># 支持并发模式</span></span><br><span class="line">Atomic operations</span><br></pre></td></tr></table></figure>
 
-</div></article></div></main><footer><div class="paginator"><a href="/json%E8%A7%A3%E6%9E%90%E6%96%B9%E5%BC%8F%E5%AF%B9%E6%AF%94%E6%B5%8B%E8%AF%95/" class="next">下一篇</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://gitfei1.github.io">不知道</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script></body></html>
+
+
+<h1 id="对比其他队列"><a href="#对比其他队列" class="headerlink" title="对比其他队列"></a>对比其他队列</h1><p>下列是官网的对比信息：</p>
+<h2 id="Built-in-Patterns"><a href="#Built-in-Patterns" class="headerlink" title="Built-in Patterns"></a>Built-in Patterns</h2><table>
+<thead>
+<tr>
+<th align="left">Project</th>
+<th align="left">Supported Patterns</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>NATS</strong></td>
+<td align="left">Streams and Services through built-in publish&#x2F;subscribe, request-reply, and load-balanced queue subscriber patterns. Dynamic request permissioning and request subject obfuscation is supported.</td>
+</tr>
+<tr>
+<td align="left"><strong>gRPC</strong></td>
+<td align="left">One service, which may have streaming semantics, per channel. Load Balancing for a service can be done either client-side or by using a proxy.</td>
+</tr>
+<tr>
+<td align="left"><strong>Kafka</strong></td>
+<td align="left">Streams through publish&#x2F;subscribe. Load balancing can be achieved with consumer groups. Application code must correlate requests with replies over multiple topics for a service (request-reply) pattern.</td>
+</tr>
+<tr>
+<td align="left"><strong>Pulsar</strong></td>
+<td align="left">Streams through publish&#x2F;subscribe. Multiple competing consumer patterns support load balancing. Application code must correlate requests with replies over multiple topics for a service (request-reply) pattern.</td>
+</tr>
+<tr>
+<td align="left"><strong>Rabbit</strong></td>
+<td align="left">Streams through publish&#x2F;subscribe, and services with a direct reply-to feature. Load balancing can be achieved with a Work Queue. Applications must correlate requests with replies over multiple topics for a service (request-reply) pattern</td>
+</tr>
+</tbody></table>
+<h2 id="Delivery-Guarantees"><a href="#Delivery-Guarantees" class="headerlink" title="Delivery Guarantees"></a>Delivery Guarantees</h2><table>
+<thead>
+<tr>
+<th align="left">Project</th>
+<th align="left">Quality of Service &#x2F; Guarantees</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>NATS</strong></td>
+<td align="left">At most once, at least once, and exactly once is available in JetStream.</td>
+</tr>
+<tr>
+<td align="left"><strong>gRPC</strong></td>
+<td align="left">At most once.</td>
+</tr>
+<tr>
+<td align="left"><strong>Kafka</strong></td>
+<td align="left">At least once, exactly once.</td>
+</tr>
+<tr>
+<td align="left"><strong>Pulsar</strong></td>
+<td align="left">At most once, at least once, and exactly once.</td>
+</tr>
+<tr>
+<td align="left"><strong>Rabbit</strong></td>
+<td align="left">At most once, at least once.</td>
+</tr>
+</tbody></table>
+<h2 id="Multi-tenancy-and-Sharing"><a href="#Multi-tenancy-and-Sharing" class="headerlink" title="Multi-tenancy and Sharing"></a>Multi-tenancy and Sharing</h2><table>
+<thead>
+<tr>
+<th align="left">Project</th>
+<th align="left">Multi-tenancy Support</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>NATS</strong></td>
+<td align="left">NATS supports true multi-tenancy and decentralized security through accounts and defining shared streams and services.</td>
+</tr>
+<tr>
+<td align="left"><strong>gRPC</strong></td>
+<td align="left">N&#x2F;A</td>
+</tr>
+<tr>
+<td align="left"><strong>Kafka</strong></td>
+<td align="left">Multi-tenancy is not supported.</td>
+</tr>
+<tr>
+<td align="left"><strong>Pulsar</strong></td>
+<td align="left">Multi-tenancy is implemented through tenants; built-in data sharing across tenants is not supported. Each tenant can have its own authentication and authorization scheme.</td>
+</tr>
+<tr>
+<td align="left"><strong>Rabbit</strong></td>
+<td align="left">Multi-tenancy is supported with vhosts; data sharing is not supported.</td>
+</tr>
+</tbody></table>
+<h2 id="Message-Retention-and-Persistence"><a href="#Message-Retention-and-Persistence" class="headerlink" title="Message Retention and Persistence"></a>Message Retention and Persistence</h2><table>
+<thead>
+<tr>
+<th align="left">Project</th>
+<th align="left">Message Retention and Persistence Support</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>NATS</strong></td>
+<td align="left">Supports memory and file persistence. Messages can be replayed by time, count, or sequence number, and durable subscriptions are supported. With NATS streaming, scripts can archive old log segments to cold storage.</td>
+</tr>
+<tr>
+<td align="left"><strong>gRPC</strong></td>
+<td align="left">N&#x2F;A</td>
+</tr>
+<tr>
+<td align="left"><strong>Kafka</strong></td>
+<td align="left">Supports file-based persistence. Messages can be replayed by specifying an offset, and durable subscriptions are supported. Log compaction is supported as well as KSQL.</td>
+</tr>
+<tr>
+<td align="left"><strong>Pulsar</strong></td>
+<td align="left">Supports tiered storage including file, Amazon S3 or Google Cloud Storage (GCS). Pulsar can replay messages from a specific position and supports durable subscriptions. Pulsar SQL and topic compaction is supported, as well as Pulsar functions.</td>
+</tr>
+<tr>
+<td align="left"><strong>Rabbit</strong></td>
+<td align="left">Supports file-based persistence. Rabbit supported queue-based semantics (vs log), so no message replay is available.</td>
+</tr>
+</tbody></table>
+<h2 id="High-Availability-and-Fault-Tolerance"><a href="#High-Availability-and-Fault-Tolerance" class="headerlink" title="High Availability and Fault Tolerance"></a>High Availability and Fault Tolerance</h2><table>
+<thead>
+<tr>
+<th align="left">Project</th>
+<th align="left">HA and FT Support</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>NATS</strong></td>
+<td align="left">Core NATS supports full mesh clustering with self-healing features to provide high availability to clients. NATS streaming has warm failover backup servers with two modes (FT and full clustering). JetStream supports horizontal scalability with built-in mirroring.</td>
+</tr>
+<tr>
+<td align="left"><strong>gRPC</strong></td>
+<td align="left">N&#x2F;A. gRPC relies on external resources for HA&#x2F;FT.</td>
+</tr>
+<tr>
+<td align="left"><strong>Kafka</strong></td>
+<td align="left">Fully replicated cluster members are coordinated via Zookeeper.</td>
+</tr>
+<tr>
+<td align="left"><strong>Pulsar</strong></td>
+<td align="left">Pulsar supports clustered brokers with geo-replication.</td>
+</tr>
+<tr>
+<td align="left"><strong>Rabbit</strong></td>
+<td align="left">Clustering Support with full data replication via federation plugins. Clusters require low-latency networks where network partitions are rare</td>
+</tr>
+</tbody></table>
+<h2 id="Deployment"><a href="#Deployment" class="headerlink" title="Deployment"></a>Deployment</h2><table>
+<thead>
+<tr>
+<th align="left">Project</th>
+<th align="left">Supported Deployment Models</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>NATS</strong></td>
+<td align="left">The NATS network element (server) is a small static binary that can be deployed anywhere from large instances in the cloud to resource constrained devices like a Raspberry PI. NATS supports the Adaptive Edge architecture which allows for large, flexible deployments. Single servers, leaf nodes, clusters, and superclusters (cluster of clusters) can be combined in any fashion for an extremely flexible deployment amenable to cloud, on-premise, edge and IoT. Clients are unaware of topology and can connect to any NATS server in a deployment.</td>
+</tr>
+<tr>
+<td align="left"><strong>gRPC</strong></td>
+<td align="left">gRPC is point to point and does not have a server or broker to deploy or manage, but always requires additional pieces for production deployments.</td>
+</tr>
+<tr>
+<td align="left"><strong>Kafka</strong></td>
+<td align="left">Kafka supports clustering with mirroring to loosely coupled remote clusters. Clients are tied to partitions defined within clusters. Kafka servers require a JVM, eight cores, 64 GB to128 GB of RAM, two or more 8-TB SAS&#x2F;SSD disks, and a 10-Gig NIC. <a target="_blank" rel="noopener" href="https://docs.nats.io/nats-concepts/overview/compare-nats#references"><em>(1)</em></a>__</td>
+</tr>
+<tr>
+<td align="left"><strong>Pulsar</strong></td>
+<td align="left">Pulsar supports clustering and built-in geo-replication between clusters. Clients may connect to any cluster with an appropriately configured tenant and namespace. Pulsar requires a JVM and requires at least 6 Linux machines or VMs. 3 running ZooKeeper. 3 running a Pulsar broker and a BookKeeper bookie. <a target="_blank" rel="noopener" href="https://docs.nats.io/nats-concepts/overview/compare-nats#references"><em>(2)</em></a>__</td>
+</tr>
+<tr>
+<td align="left"><strong>Rabbit</strong></td>
+<td align="left">Rabbit supports clusters and cross-cluster message propagation through a federation plugin. Clients are unaware of topology and may connect to any cluster. The server requires the Erlang VM and dependencies.</td>
+</tr>
+</tbody></table>
+<h2 id="Integrations"><a href="#Integrations" class="headerlink" title="Integrations"></a>Integrations</h2><table>
+<thead>
+<tr>
+<th align="left">Project</th>
+<th align="left">Built-in and Third Party Integrations</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>NATS</strong></td>
+<td align="left">NATS supports WebSockets, a Kafka bridge, an IBM MQ Bridge, a Redis Connector, Apache Spark, Apache Flink, CoreOS, Elastic, Elasticsearch, Prometheus, Telegraf, Logrus, Fluent Bit, Fluentd, OpenFAAS, HTTP, and MQTT, and <a target="_blank" rel="noopener" href="https://nats.io/download/#connectors-and-utilities">more</a>.</td>
+</tr>
+<tr>
+<td align="left"><strong>gRPC</strong></td>
+<td align="left">There are a number of third party integrations including HTTP, JSON, Prometheus, Grift and others. <a target="_blank" rel="noopener" href="https://docs.nats.io/nats-concepts/overview/compare-nats#references"><em>(3)</em></a>__</td>
+</tr>
+<tr>
+<td align="left"><strong>Kafka</strong></td>
+<td align="left">Kafka has a large number of integrations in its ecosystem, including stream processing (Storm, Samza, Flink), Hadoop, database (JDBC, Oracle Golden Gate), Search and Query (ElasticSearch, Hive), and a variety of logging and other integrations.</td>
+</tr>
+<tr>
+<td align="left"><strong>Pulsar</strong></td>
+<td align="left">Pulsar has many integrations, including ActiveMQ, Cassandra, Debezium, Flume, Elasticsearch, Kafka, Redis, and others.</td>
+</tr>
+<tr>
+<td align="left"><strong>Rabbit</strong></td>
+<td align="left">RabbitMQ has many plugins, including protocols (MQTT, STOMP), WebSockets, and various authorization and authentication plugins.</td>
+</tr>
+</tbody></table>
+</div></article></div></main><footer><div class="paginator"><a href="/json%E8%A7%A3%E6%9E%90%E6%96%B9%E5%BC%8F%E5%AF%B9%E6%AF%94%E6%B5%8B%E8%AF%95/" class="next">NEXT</a></div><div class="copyright"><p>© 2015 - 2024 <a href="https://gitfei1.github.io">不知道</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script></body></html>
